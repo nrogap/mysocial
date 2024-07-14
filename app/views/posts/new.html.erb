@@ -1,0 +1,13 @@
+<a href="/">back</a>
+
+<h1>New Article</h1>
+
+<%= form_with model: @post do |form| %>
+  <div>
+    <%= form.label :message %><br>
+    <%= form.text_area :message %>
+  </div>
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
