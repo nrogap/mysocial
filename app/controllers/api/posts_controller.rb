@@ -33,6 +33,11 @@ class Api::PostsController < Api::ApplicationController
   def update
     @post = Post.find(params[:id])
 
+    if is_owner?
+      head :forbidden
+      return
+    end
+
     if @post.update(update_params)
       render json: @post
     else
@@ -43,12 +48,21 @@ class Api::PostsController < Api::ApplicationController
   def destroy
     @post = Post.find(params[:id])
 
+    if is_owner?
+      head :forbidden
+      return
+    end
+
     @post.destroy
 
     head :ok
   end
 
   private
+
+    def is_owner?
+      @post.user.id != current_user.id
+    end
 
     def error_message
       @post.errors.full_messages.first
