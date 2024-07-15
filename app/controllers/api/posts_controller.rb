@@ -1,4 +1,4 @@
-class Api::PostsController < Api::ApplicationController
+class Api::PostsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :index_by_user, :show]
 
   def index
