@@ -5,6 +5,10 @@ class PostsController < ApplicationController
     @posts = Post.order(created_at: :desc).offset(0).limit(5)
   end
 
+  def index_by_user
+    @posts = Post.where(user_id: params[:user_id]).order(created_at: :desc).offset(0).limit(5)
+  end
+
   def show
     @post = Post.find(params[:id])
   end

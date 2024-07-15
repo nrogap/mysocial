@@ -9,7 +9,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :posts
+  resources :posts do
+    collection do
+      get "users/:user_id" => "posts#index_by_user"
+    end
+  end
 
   get "up" => "rails/health#show", as: :rails_health_check
 
