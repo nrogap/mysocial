@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "Posts", type: :request do
   describe "GET /api/posts" do
     let(:user) { create(:user) }
-    let!(:post_record) { create_list(:post, 5, user: user) }
+    let!(:post_records) { create_list(:post, 5, user: user) }
 
     it "returns a successful response" do
       get "/api/posts"
@@ -16,6 +16,32 @@ RSpec.describe "Posts", type: :request do
       array.each do |member|
         expect(member["message"]).to be_kind_of String
         expect(member["user_id"]).to eq user.id
+        expect(member["user"]["email"]).to eq user.email
+      end
+    end
+  end
+
+  describe "GET /api/posts/users/:user_id" do
+    let(:target_user) { create(:user) }
+    let(:other_user) { create(:user) }
+    let!(:target_posts) { create_list(:post, 5, user: target_user) }
+    let!(:other_posts) { create_list(:post, 2, user: other_user) }
+
+    it "returns http success" do
+      get "/api/posts/users/#{target_user.id}"
+
+      expect(response).to have_http_status(:success)
+
+      response_body = JSON.parse(response.body)
+
+
+      array = JSON.parse(response.body)
+      expect(array.size).to eq 5
+
+      array.each do |member|
+        expect(member["message"]).to be_kind_of String
+        expect(member["user_id"]).to eq target_user.id
+        expect(member["user"]["email"]).to eq target_user.email
       end
     end
   end
@@ -33,6 +59,7 @@ RSpec.describe "Posts", type: :request do
         response_body = JSON.parse(response.body)
         expect(response_body["message"]).to be_kind_of String
         expect(response_body["user_id"]).to eq user.id
+        expect(response_body["user"]["email"]).to eq user.email
       end
     end
 
@@ -63,6 +90,7 @@ RSpec.describe "Posts", type: :request do
 
         expect(response_body["message"]).to eq "Learning by doing"
         expect(response_body["user_id"]).to eq user.id
+        expect(response_body["user"]["email"]).to eq user.email
       end
 
       context "have invalid params" do

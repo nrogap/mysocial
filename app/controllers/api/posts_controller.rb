@@ -4,27 +4,27 @@ class Api::PostsController < Api::ApplicationController
   def index
     @posts = Post.order(created_at: :desc)
 
-    render json: @posts
+    render json: @posts, include: include_attributes
   end
 
   def index_by_user
     @user = User.find(params[:user_id])
     @posts = Post.where(user_id: @user.id).order(created_at: :desc)
 
-    render json: @posts
+    render json: @posts, include: include_attributes
   end
 
   def show
     @post = Post.find(params[:id])
 
-    render json: @post
+    render json: @post, include: include_attributes
   end
 
   def create
     @post = Post.new(message: create_params[:message], user_id: current_user.id)
 
     if @post.save
-      render json: @post
+      render json: @post, include: include_attributes
     else
       render json: { error: error_message }, status: :unprocessable_entity
     end
@@ -39,7 +39,7 @@ class Api::PostsController < Api::ApplicationController
     end
 
     if @post.update(update_params)
-      render json: @post
+      render json: @post, include: include_attributes
     else
       render json: { error: error_message }, status: :unprocessable_entity
     end
@@ -59,6 +59,10 @@ class Api::PostsController < Api::ApplicationController
   end
 
   private
+
+    def include_attributes
+      { user: { only: [:email] }}
+    end
 
     def is_not_owner?
       @post.user.id != current_user.id
