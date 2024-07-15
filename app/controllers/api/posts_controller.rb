@@ -7,6 +7,12 @@ class Api::PostsController < Api::ApplicationController
     render json: @posts
   end
 
+  def index_by_user
+    @posts = Post.where(user_id: params[:user_id]).order(created_at: :desc).offset(0).limit(5)
+
+    render json: @posts
+  end
+
   def show
     @post = Post.find(params[:id])
 
