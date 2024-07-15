@@ -152,7 +152,7 @@ RSpec.describe "Posts", type: :request do
           it "returns http error" do
             put "/api/posts/#{post_record.id}", params: params, headers: owner_auth_headers
 
-            expect(response).to have_http_status(:unprocessable_content)
+            expect(response).to have_http_status(:unprocessable_entity)
           end
         end
       end
