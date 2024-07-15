@@ -8,7 +8,8 @@ class Api::PostsController < Api::ApplicationController
   end
 
   def index_by_user
-    @posts = Post.where(user_id: params[:user_id]).order(created_at: :desc).offset(0).limit(5)
+    @user = User.find(params[:user_id])
+    @posts = Post.where(user_id: @user.id).order(created_at: :desc).offset(0).limit(5)
 
     render json: @posts
   end
