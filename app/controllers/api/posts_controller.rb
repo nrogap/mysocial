@@ -33,7 +33,7 @@ class Api::PostsController < Api::ApplicationController
   def update
     @post = Post.find(params[:id])
 
-    if is_owner?
+    if is_not_owner?
       head :forbidden
       return
     end
@@ -48,7 +48,7 @@ class Api::PostsController < Api::ApplicationController
   def destroy
     @post = Post.find(params[:id])
 
-    if is_owner?
+    if is_not_owner?
       head :forbidden
       return
     end
@@ -60,7 +60,7 @@ class Api::PostsController < Api::ApplicationController
 
   private
 
-    def is_owner?
+    def is_not_owner?
       @post.user.id != current_user.id
     end
 
